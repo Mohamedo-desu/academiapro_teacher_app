@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "academiapro_teacher_app",
-    "slug": "academiapro_teacher_app",
+    "name": "AcademiaPro Master",
+    "slug": "academiapromaster",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "academiaproteacherapp",
+    "scheme": "academiapromaster",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -18,8 +18,10 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
+      "softwareKeyboardLayoutMode": "pan",
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.mohamedodesu.academiapromaster"
     },
     "web": {
       "output": "static",
@@ -38,11 +40,32 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true
+          }
+        }
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "15e7e9b4-9cd0-4c27-9da7-b621767350ed"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/15e7e9b4-9cd0-4c27-9da7-b621767350ed"
     }
   }
 }

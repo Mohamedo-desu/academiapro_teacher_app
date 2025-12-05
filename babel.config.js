@@ -1,0 +1,35 @@
+module.exports = function (api) {
+  api.cache(true);
+
+  return {
+    presets: [
+      [
+        "babel-preset-expo",
+        {
+          "react-compiler": {
+            sources: (filename) => {
+              // Match file names to include in the React Compiler.
+              return filename.includes("src/");
+            },
+          },
+        },
+      ],
+    ],
+
+    // other config
+    plugins: [
+      // other plugins
+      [
+        "react-native-unistyles/plugin",
+        {
+          // pass root folder of your application
+          // all files under this folder will be processed by the Babel plugin
+          // if you need to include more folders, or customize discovery process
+          // check available babel options
+          root: "src",
+        },
+      ],
+      "react-native-reanimated/plugin",
+    ],
+  };
+};
