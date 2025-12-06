@@ -9,9 +9,16 @@ import { colors } from "@/unistyles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Checkbox from "expo-checkbox";
-import React, { useEffect, useState } from "react";
+import { router } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
+import {
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { z } from "zod";
 
@@ -26,6 +33,8 @@ const AuthIndex = () => {
   const [remember, setRemember] = useState(false);
   const [shakeKey, setShakeKey] = useState(0);
   const [passwordSecure, setPasswordSecure] = useState(false);
+
+  const passwordRef = useRef<TextInput | null>(null);
 
   const {
     control,
@@ -123,6 +132,8 @@ const AuthIndex = () => {
                 value={value}
                 error={errors.email?.message}
                 shouldShake={shakeKey}
+                returnKeyType="next"
+                onSubmitEditing={() => passwordRef.current?.focus()}
               />
             )}
             name="email"
@@ -135,6 +146,7 @@ const AuthIndex = () => {
               <Input
                 label="Password"
                 placeholder="Enter your password"
+                // TODO:Needs debugging outline props disappear
                 secureTextEntry={passwordSecure && !!value}
                 onBlur={onBlur}
                 onChangeText={(text) => {
@@ -144,9 +156,12 @@ const AuthIndex = () => {
                     setPasswordSecure(false);
                   }
                 }}
+                inputRef={passwordRef}
                 value={value}
                 error={errors.password?.message}
                 shouldShake={shakeKey}
+                returnKeyType="done"
+                onSubmitEditing={onSubmitPress}
               />
             )}
             name="password"
@@ -176,6 +191,13 @@ const AuthIndex = () => {
       >
         <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => router.navigate("/(auth)/create-account")}
+        style={styles.CreateAccountButton}
+        activeOpacity={0.5}
+      >
+        <Text style={styles.CreateAccountButtonText}>Create Account</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -190,6 +212,7 @@ const styles = StyleSheet.create((theme, rt) => ({
     backgroundColor: theme.colors.background,
     paddingHorizontal: theme.paddingHorizontal * 2,
     gap: theme.gap(10),
+    paddingBottom: rt.insets.bottom,
   },
   toggleThemeWrapper: {
     position: "absolute",
@@ -274,8 +297,28 @@ const styles = StyleSheet.create((theme, rt) => ({
     // experimental_backgroundImage: `linear-gradient(180deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
     boxShadow: `0px 2px 2px ${theme.colors.primary}`,
   },
+  CreateAccountButton: {
+    backgroundColor: "transparent",
+    width: "100%",
+    height: theme.spacing["3xl"],
+    padding: theme.paddingHorizontal,
+    borderRadius: theme.radii.sm,
+    justifyContent: "center",
+    alignItems: "center",
+    // experimental_backgroundImage: `linear-gradient(180deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
+    outlineWidth: 1,
+    outlineOffset: 3,
+    outlineColor: theme.colors.primary,
+    borderWidth: 1,
+    borderColor: theme.colors.grey300,
+  },
   submitButtonText: {
     color: theme.colors.onPrimary,
+    fontFamily: "Bold",
+    fontSize: theme.fontSizes.md,
+  },
+  CreateAccountButtonText: {
+    color: theme.colors.primary,
     fontFamily: "Bold",
     fontSize: theme.fontSizes.md,
   },

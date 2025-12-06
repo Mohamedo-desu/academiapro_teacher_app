@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { RefObject, useEffect, useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -17,9 +17,17 @@ type InputProps = {
   value?: string;
   error?: string;
   shouldShake?: number;
+  returnKeyType?: "next" | "done" | "go" | "search" | "send";
+  onSubmitEditing?: () => void;
+  inputRef?: RefObject<TextInput>;
 };
 
-const UniTextInput = withUnistyles(TextInput);
+const UniTextInput = withUnistyles(TextInput, (theme) => ({
+  placeholderTextColor: theme.colors.grey500,
+  cursorColor: theme.colors.primary,
+  selectionColor: theme.colors.primary + "55",
+  selectionHandleColor: theme.colors.primary,
+}));
 
 const Input = ({
   label,
@@ -30,6 +38,9 @@ const Input = ({
   value,
   error,
   shouldShake,
+  returnKeyType,
+  onSubmitEditing,
+  inputRef,
 }: InputProps) => {
   const [focused, setFocused] = useState(false);
 
@@ -69,12 +80,14 @@ const Input = ({
             setFocused(false);
             onBlur?.();
           }}
+          ref={inputRef}
           onFocus={() => setFocused(true)}
           onChangeText={onChangeText}
           value={value}
-          uniProps={(theme) => ({
-            placeholderTextColor: theme.colors.grey500,
-          })}
+          autoCapitalize="none"
+          autoCorrect={false}
+          returnKeyType={returnKeyType}
+          onSubmitEditing={onSubmitEditing}
         />
       </Animated.View>
 
@@ -129,7 +142,7 @@ const styles = StyleSheet.create((theme) => ({
     padding: theme.paddingHorizontal,
     outlineWidth: 1,
     outlineOffset: 3,
-    outlineColor: theme.colors.primary,
+    outlineColor: theme.colors.primary + "" + (focused ? "FF" : "45"),
     borderWidth: 1,
     borderColor: theme.colors.grey300,
     color: theme.colors.onSurface,
