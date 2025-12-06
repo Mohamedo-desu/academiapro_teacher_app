@@ -6,7 +6,20 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
-import { StyleSheet } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
+
+type InputProps = {
+  label: string;
+  placeholder: string;
+  secureTextEntry?: boolean;
+  onBlur?: () => void;
+  onChangeText?: (text: string) => void;
+  value?: string;
+  error?: string;
+  shouldShake?: number;
+};
+
+const UniTextInput = withUnistyles(TextInput);
 
 const Input = ({
   label,
@@ -17,16 +30,7 @@ const Input = ({
   value,
   error,
   shouldShake,
-}: {
-  label: string;
-  placeholder: string;
-  secureTextEntry?: boolean;
-  onBlur?: () => void;
-  onChangeText?: (text: string) => void;
-  value?: string;
-  error?: string;
-  shouldShake?: number;
-}) => {
+}: InputProps) => {
   const [focused, setFocused] = useState(false);
 
   // SHARED VALUE FOR SHAKE
@@ -57,7 +61,7 @@ const Input = ({
 
       {/* Input + Shake wrapper */}
       <Animated.View style={[animatedStyle]}>
-        <TextInput
+        <UniTextInput
           placeholder={placeholder}
           secureTextEntry={secureTextEntry}
           style={styles.input(focused, !!error)}
@@ -68,6 +72,9 @@ const Input = ({
           onFocus={() => setFocused(true)}
           onChangeText={onChangeText}
           value={value}
+          uniProps={(theme) => ({
+            placeholderTextColor: theme.colors.grey500,
+          })}
         />
       </Animated.View>
 
@@ -124,7 +131,8 @@ const styles = StyleSheet.create((theme) => ({
     outlineOffset: 3,
     outlineColor: theme.colors.primary,
     borderWidth: 1,
-    borderColor: theme.colors.grey400,
+    borderColor: theme.colors.grey300,
+    color: theme.colors.onSurface,
   }),
 
   errorText: {

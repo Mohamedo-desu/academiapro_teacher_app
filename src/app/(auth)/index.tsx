@@ -1,4 +1,5 @@
 import Input from "@/src/components/common/Input";
+import ToggleTheme from "@/src/components/ToggleTheme";
 import {
   deleteFromLocalStorage,
   getFromLocalStorage,
@@ -86,6 +87,9 @@ const AuthIndex = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.toggleThemeWrapper}>
+        <ToggleTheme />
+      </View>
       <View style={styles.bodyWrapper}>
         {/* Logo + Title */}
         <View style={styles.headerWrapper}>
@@ -178,7 +182,7 @@ const AuthIndex = () => {
 
 export default AuthIndex;
 
-const styles = StyleSheet.create((theme) => ({
+const styles = StyleSheet.create((theme, rt) => ({
   container: {
     flex: 1,
     justifyContent: "center",
@@ -186,6 +190,13 @@ const styles = StyleSheet.create((theme) => ({
     backgroundColor: theme.colors.background,
     paddingHorizontal: theme.paddingHorizontal * 2,
     gap: theme.gap(10),
+  },
+  toggleThemeWrapper: {
+    position: "absolute",
+    top: rt.insets.top + theme.paddingHorizontal,
+    right: theme.paddingHorizontal * 2,
+    width: "100%",
+    alignItems: "flex-end",
   },
   bodyWrapper: { width: "100%", gap: theme.gap(10) },
   headerWrapper: {
@@ -197,8 +208,8 @@ const styles = StyleSheet.create((theme) => ({
   logoCircle: {
     padding: 20,
     borderRadius: 100,
-    backgroundColor: theme.colors.overlay,
-    outlineOffset: 3,
+    backgroundColor: theme.colors.grey200,
+    outlineOffset: 4,
     outlineWidth: 1,
     outlineStyle: "solid",
     outlineColor: theme.colors.primary,
@@ -260,7 +271,8 @@ const styles = StyleSheet.create((theme) => ({
     borderRadius: theme.radii.sm,
     justifyContent: "center",
     alignItems: "center",
-    experimental_backgroundImage: `linear-gradient(180deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
+    // experimental_backgroundImage: `linear-gradient(180deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
+    boxShadow: `0px 2px 2px ${theme.colors.primary}`,
   },
   submitButtonText: {
     color: theme.colors.onPrimary,

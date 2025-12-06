@@ -163,7 +163,7 @@ const breakpoints = { phone: 0, largePhone: 400, tablet: 768 };
    Register with Unistyles
 --------------------------------------------- */
 StyleSheet.configure({
-  settings: { initialTheme: "light" },
+  settings: { adaptiveThemes: true },
   themes: { light: lightTheme, dark: darkTheme },
   breakpoints,
 });
