@@ -3,9 +3,9 @@ import { colors } from "@/unistyles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { z } from "zod";
 
@@ -25,8 +25,6 @@ type CreateAccountForm = z.infer<typeof schema>;
 ---------------------------------------------------*/
 const CreateAccount = () => {
   const [shakeKey, setShakeKey] = useState(0);
-
-  const passwordRef = useRef<TextInput | null>(null);
 
   const {
     control,
@@ -123,7 +121,6 @@ const CreateAccount = () => {
               <Input
                 label="Password"
                 placeholder="Enter password"
-                secureTextEntry
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -170,15 +167,8 @@ const styles = StyleSheet.create((theme, rt) => ({
     alignItems: "center",
     backgroundColor: theme.colors.background,
     paddingHorizontal: theme.paddingHorizontal * 2,
-    gap: theme.gap(10),
+    gap: theme.gap(5),
     paddingBottom: rt.insets.bottom,
-  },
-  toggleThemeWrapper: {
-    position: "absolute",
-    top: rt.insets.top + theme.paddingHorizontal,
-    right: theme.paddingHorizontal * 2,
-    width: "100%",
-    alignItems: "flex-end",
   },
   bodyWrapper: { width: "100%", gap: theme.gap(5) },
 
@@ -187,10 +177,9 @@ const styles = StyleSheet.create((theme, rt) => ({
     justifyContent: "center",
     gap: theme.gap(5),
   },
-
   logoCircle: {
-    padding: 20,
-    borderRadius: 100,
+    padding: theme.paddingHorizontal * 2,
+    borderRadius: theme.radii.xl,
     backgroundColor: theme.colors.grey200,
     outlineOffset: 4,
     outlineWidth: 1,
@@ -201,7 +190,6 @@ const styles = StyleSheet.create((theme, rt) => ({
   titleContainer: {
     alignItems: "center",
     justifyContent: "center",
-    gap: theme.gap(1),
   },
 
   appTitle: {
@@ -225,7 +213,6 @@ const styles = StyleSheet.create((theme, rt) => ({
     backgroundColor: theme.colors.primary,
     width: "100%",
     height: theme.spacing["3xl"],
-    padding: theme.paddingHorizontal,
     borderRadius: theme.radii.sm,
     justifyContent: "center",
     alignItems: "center",
@@ -236,7 +223,6 @@ const styles = StyleSheet.create((theme, rt) => ({
     backgroundColor: "transparent",
     width: "100%",
     height: theme.spacing["3xl"],
-    padding: theme.paddingHorizontal,
     borderRadius: theme.radii.sm,
     justifyContent: "center",
     alignItems: "center",
@@ -251,11 +237,17 @@ const styles = StyleSheet.create((theme, rt) => ({
     color: theme.colors.onPrimary,
     fontFamily: "Bold",
     fontSize: theme.fontSizes.md,
+    includeFontPadding: false,
+    textAlignVertical: "center",
+    verticalAlign: "middle",
   },
 
   CreateAccountButtonText: {
     color: theme.colors.primary,
     fontFamily: "Bold",
     fontSize: theme.fontSizes.md,
+    includeFontPadding: false,
+    textAlignVertical: "center",
+    verticalAlign: "middle",
   },
 }));

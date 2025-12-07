@@ -1,5 +1,6 @@
 import { moderateScale } from "react-native-size-matters";
 import { StyleSheet } from "react-native-unistyles";
+import { getFromLocalStorage } from "./src/store/storage";
 
 /* --------------------------------------------
    Base unit (only responsive base you export)
@@ -163,7 +164,12 @@ const breakpoints = { phone: 0, largePhone: 400, tablet: 768 };
    Register with Unistyles
 --------------------------------------------- */
 StyleSheet.configure({
-  settings: { adaptiveThemes: true },
+  settings: {
+    initialTheme: () => {
+      const { theme } = getFromLocalStorage(["theme"]);
+      return theme ?? "light";
+    },
+  },
   themes: { light: lightTheme, dark: darkTheme },
   breakpoints,
 });

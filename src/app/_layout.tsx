@@ -6,9 +6,9 @@ import {
   useFonts,
 } from "@expo-google-fonts/nunito";
 import { Stack } from "expo-router";
-import React from "react";
 import { SystemBars } from "react-native-edge-to-edge";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useUnistyles } from "react-native-unistyles";
 
 const RootLayout = () => {
   let [fontsLoaded] = useFonts({
@@ -17,6 +17,14 @@ const RootLayout = () => {
     Bold: Nunito_700Bold,
     SemiBold: Nunito_600SemiBold,
   });
+  const { theme } = useUnistyles();
+
+  const statusStyle =
+    theme.colors.background === "#121212"
+      ? "light"
+      : theme.colors.background === "#FFFFFF"
+      ? "dark"
+      : "auto";
 
   if (!fontsLoaded) {
     return null;
@@ -25,14 +33,14 @@ const RootLayout = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Protected guard={true}>
+        <Stack.Protected guard={false}>
           <Stack.Screen name="(auth)" />
         </Stack.Protected>
-        <Stack.Protected guard={false}>
+        <Stack.Protected guard={true}>
           <Stack.Screen name="(main)" />
         </Stack.Protected>
       </Stack>
-      <SystemBars style={"auto"} />
+      <SystemBars style={statusStyle} />
     </GestureHandlerRootView>
   );
 };

@@ -1,3 +1,4 @@
+import AnimatedCheckbox from "@/src/components/AnimatedCheckbox";
 import Input from "@/src/components/common/Input";
 import ToggleTheme from "@/src/components/ToggleTheme";
 import {
@@ -8,17 +9,10 @@ import {
 import { colors } from "@/unistyles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Checkbox from "expo-checkbox";
 import { router } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  Pressable,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 import { z } from "zod";
 
@@ -32,9 +26,6 @@ type LoginFormData = z.infer<typeof schema>;
 const AuthIndex = () => {
   const [remember, setRemember] = useState(false);
   const [shakeKey, setShakeKey] = useState(0);
-  const [passwordSecure, setPasswordSecure] = useState(false);
-
-  const passwordRef = useRef<TextInput | null>(null);
 
   const {
     control,
@@ -81,10 +72,6 @@ const AuthIndex = () => {
           setValue("email", parsed.email);
           setValue("password", parsed.password);
           setRemember(true);
-
-          if (parsed.password) {
-            setPasswordSecure(true); // Mask if password exists
-          }
         }
       } catch (err) {
         console.log("Failed to load saved login data:", err);
@@ -125,15 +112,13 @@ const AuthIndex = () => {
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label="School Email Address"
+                label="Email Address"
                 placeholder="Enter your email"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
                 error={errors.email?.message}
                 shouldShake={shakeKey}
-                returnKeyType="next"
-                onSubmitEditing={() => passwordRef.current?.focus()}
               />
             )}
             name="email"
@@ -146,22 +131,11 @@ const AuthIndex = () => {
               <Input
                 label="Password"
                 placeholder="Enter your password"
-                // TODO:Needs debugging outline props disappear
-                secureTextEntry={passwordSecure && !!value}
                 onBlur={onBlur}
-                onChangeText={(text) => {
-                  onChange(text);
-                  // Only disable secure if fully cleared
-                  if (text.length === 0 && passwordSecure) {
-                    setPasswordSecure(false);
-                  }
-                }}
-                inputRef={passwordRef}
+                onChangeText={onChange}
                 value={value}
                 error={errors.password?.message}
                 shouldShake={shakeKey}
-                returnKeyType="done"
-                onSubmitEditing={onSubmitPress}
               />
             )}
             name="password"
@@ -170,11 +144,8 @@ const AuthIndex = () => {
           {/* Remember + Forgot Password */}
           <View style={styles.rowBetween}>
             <View style={styles.rowCenter}>
-              <Checkbox
-                value={remember}
-                onValueChange={setRemember}
-                color={remember ? colors.primary : undefined}
-              />
+              <AnimatedCheckbox value={remember} onChange={setRemember} />
+
               <Text style={styles.rememberText}>Remember Me</Text>
             </View>
 
@@ -211,26 +182,26 @@ const styles = StyleSheet.create((theme, rt) => ({
     alignItems: "center",
     backgroundColor: theme.colors.background,
     paddingHorizontal: theme.paddingHorizontal * 2,
-    gap: theme.gap(10),
+    gap: theme.gap(5),
     paddingBottom: rt.insets.bottom,
   },
   toggleThemeWrapper: {
     position: "absolute",
-    top: rt.insets.top + theme.paddingHorizontal,
+    top: rt.insets.top,
     right: theme.paddingHorizontal * 2,
     width: "100%",
     alignItems: "flex-end",
   },
-  bodyWrapper: { width: "100%", gap: theme.gap(10) },
+  bodyWrapper: { width: "100%", gap: theme.gap(5) },
   headerWrapper: {
     alignItems: "center",
     justifyContent: "center",
-    gap: theme.gap(10),
+    gap: theme.gap(5),
   },
 
   logoCircle: {
-    padding: 20,
-    borderRadius: 100,
+    padding: theme.paddingHorizontal * 2,
+    borderRadius: theme.radii.xl,
     backgroundColor: theme.colors.grey200,
     outlineOffset: 4,
     outlineWidth: 1,
@@ -241,7 +212,6 @@ const styles = StyleSheet.create((theme, rt) => ({
   titleContainer: {
     alignItems: "center",
     justifyContent: "center",
-    gap: theme.gap(1),
   },
 
   appTitle: {
@@ -290,22 +260,18 @@ const styles = StyleSheet.create((theme, rt) => ({
     backgroundColor: theme.colors.primary,
     width: "100%",
     height: theme.spacing["3xl"],
-    padding: theme.paddingHorizontal,
     borderRadius: theme.radii.sm,
     justifyContent: "center",
     alignItems: "center",
-    // experimental_backgroundImage: `linear-gradient(180deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
-    boxShadow: `0px 2px 2px ${theme.colors.primary}`,
+    // boxShadow: `0px 2px 2px ${theme.colors.primary}`,
   },
   CreateAccountButton: {
     backgroundColor: "transparent",
     width: "100%",
     height: theme.spacing["3xl"],
-    padding: theme.paddingHorizontal,
     borderRadius: theme.radii.sm,
     justifyContent: "center",
     alignItems: "center",
-    // experimental_backgroundImage: `linear-gradient(180deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
     outlineWidth: 1,
     outlineOffset: 3,
     outlineColor: theme.colors.primary,
@@ -316,10 +282,16 @@ const styles = StyleSheet.create((theme, rt) => ({
     color: theme.colors.onPrimary,
     fontFamily: "Bold",
     fontSize: theme.fontSizes.md,
+    includeFontPadding: false,
+    textAlignVertical: "center",
+    verticalAlign: "middle",
   },
   CreateAccountButtonText: {
     color: theme.colors.primary,
     fontFamily: "Bold",
     fontSize: theme.fontSizes.md,
+    includeFontPadding: false,
+    textAlignVertical: "center",
+    verticalAlign: "middle",
   },
 }));

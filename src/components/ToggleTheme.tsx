@@ -1,3 +1,4 @@
+import { colors } from "@/unistyles";
 import { Feather } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
@@ -12,6 +13,7 @@ import {
   UnistylesRuntime,
   withUnistyles,
 } from "react-native-unistyles";
+import { saveToLocalStorage } from "../store/storage";
 
 const ThemeItems = [
   { label: "Light", value: "light", icon: "sun" },
@@ -31,12 +33,16 @@ const UpdateTheme = (value: string) => {
   if (value === "light") {
     UnistylesRuntime.setAdaptiveThemes(false);
     UnistylesRuntime.setTheme("light");
+    saveToLocalStorage([{ key: "theme", value: "light" }]);
   } else if (value === "dark") {
     UnistylesRuntime.setAdaptiveThemes(false);
     UnistylesRuntime.setTheme("dark");
+    saveToLocalStorage([{ key: "theme", value: "dark" }]);
   } else {
     UnistylesRuntime.setAdaptiveThemes(true);
   }
+
+  UnistylesRuntime.setRootViewBackgroundColor(colors.primary);
 };
 
 const ToggleTheme = () => {
@@ -144,6 +150,7 @@ const styles = StyleSheet.create((theme) => ({
     height: 55,
     overflow: "hidden",
     borderRadius: theme.radii.md,
+    zIndex: 10,
   },
 
   centerWrapper: {
