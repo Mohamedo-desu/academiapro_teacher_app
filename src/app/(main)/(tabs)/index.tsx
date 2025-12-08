@@ -1,6 +1,6 @@
 import { TAB_BAR_HEIGHT } from "@/src/components/MyTabBar";
 import { AntDesign } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -8,9 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { AnimatedFAB } from "react-native-paper";
+import { Button } from "react-native-paper";
 import Animated, { LinearTransition } from "react-native-reanimated";
 import { StyleSheet } from "react-native-unistyles";
+import { TabScrollYContext } from "./_layout";
 
 const classesData = Array.from({ length: 15 }, (_, i) => ({
   id: (i + 1).toString(),
@@ -24,8 +25,7 @@ type ClassItem = (typeof classesData)[0] & {
 };
 
 const Classes = () => {
-  const [isExtended, setIsExtended] = useState(true);
-  const [visible, setVisible] = useState(true);
+  const scrollY = useContext(TabScrollYContext);
 
   const [data, setData] = useState<ClassItem[]>(
     classesData.map((item, index) => ({
@@ -80,11 +80,8 @@ const Classes = () => {
       </TouchableOpacity>
     </Animated.View>
   );
-
-  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const yOffset = event.nativeEvent.contentOffset.y;
-    setIsExtended(yOffset <= 0); // extended only at top
-    setVisible(yOffset <= 0 || yOffset < 50); // hide FAB if scrolled down
+  const scrollHandler = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    scrollY.value = event.nativeEvent.contentOffset.y;
   };
 
   return (
@@ -99,20 +96,18 @@ const Classes = () => {
         columnWrapperStyle={styles.columnWrapperStyle}
         showsVerticalScrollIndicator={false}
         itemLayoutAnimation={LinearTransition}
-        onScroll={onScroll}
+        onScroll={scrollHandler}
         scrollEventThrottle={16}
       />
 
-      <AnimatedFAB
+      <Button
         icon="plus"
-        label="Add Class"
-        extended={true}
-        visible={true}
-        onPress={() => console.log("FAB Pressed")}
-        animateFrom="right"
-        iconMode="dynamic"
+        mode="contained"
+        onPress={() => console.log("Pressed")}
         style={styles.fabStyle}
-      />
+      >
+        Add Class
+      </Button>
     </>
   );
 };
@@ -127,7 +122,7 @@ const styles = StyleSheet.create((theme, rt) => ({
   contentContainerStyle: {
     paddingHorizontal: theme.paddingHorizontal * 2,
     paddingTop: theme.gap(4),
-    paddingBottom: rt.insets.bottom + TAB_BAR_HEIGHT,
+    paddingBottom: rt.insets.bottom + TAB_BAR_HEIGHT * 2,
     gap: theme.gap(4),
   },
   columnWrapperStyle: {
@@ -187,5 +182,9 @@ const styles = StyleSheet.create((theme, rt) => ({
     position: "absolute",
     bottom: rt.insets.bottom + TAB_BAR_HEIGHT,
     right: theme.paddingHorizontal * 2,
+    borderRadius: theme.radii.sm,
+    outlineWidth: 1,
+    outlineOffset: 3,
+    outlineColor: theme.colors.primary,
   },
 }));

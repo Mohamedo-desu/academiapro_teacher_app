@@ -6,10 +6,8 @@ import {
   useFonts,
 } from "@expo-google-fonts/nunito";
 import { Stack } from "expo-router";
-import { SystemBars } from "react-native-edge-to-edge";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { PaperProvider } from "react-native-paper";
-import { useUnistyles } from "react-native-unistyles";
+import ThemeProvider from "../providers/ThemeProvider";
 
 /* --------------------------------------------
    Root Layout Component
@@ -22,21 +20,11 @@ const RootLayout = () => {
     Bold: Nunito_700Bold,
   });
 
-  const { theme } = useUnistyles();
-
-  // Determine system bar style
-  const statusStyle =
-    theme.colors.background === "#121212"
-      ? "light"
-      : theme.colors.background === "#FFFFFF"
-      ? "dark"
-      : "auto";
-
   if (!fontsLoaded) return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <PaperProvider>
+      <ThemeProvider>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Protected guard={false}>
             <Stack.Screen name="(auth)" />
@@ -45,8 +33,7 @@ const RootLayout = () => {
             <Stack.Screen name="(main)" />
           </Stack.Protected>
         </Stack>
-        <SystemBars style={statusStyle} />
-      </PaperProvider>
+      </ThemeProvider>
     </GestureHandlerRootView>
   );
 };
