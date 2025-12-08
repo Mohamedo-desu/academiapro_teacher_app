@@ -1,6 +1,5 @@
 import MyTabBar from "@/src/components/MyTabBar";
 import { Feather } from "@expo/vector-icons";
-
 import { BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
 import { Tabs } from "expo-router";
 import React, { createContext } from "react";
@@ -28,11 +27,13 @@ const TabLayout = () => {
     headerShown: true,
     tabBarStyle: {
       backgroundColor: theme.colors.surface,
+      borderTopWidth: 1,
+      borderTopColor: theme.colors.primary,
     },
     headerStyle: {
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.primary,
     },
-    headerTintColor: theme.colors.onSurface,
+    headerTintColor: theme.colors.onPrimary,
     tabBarBadgeStyle: {
       backgroundColor: theme.colors.primary,
       fontFamily: "Regular",
@@ -43,13 +44,10 @@ const TabLayout = () => {
     },
     headerTitleAlign: "center",
     tabBarActiveTintColor: theme.colors.primary,
-    tabBarInactiveTintColor: theme.colors.grey500,
+    tabBarInactiveTintColor: theme.colors.grey400,
     animation: "shift",
     tabBarLabelStyle: {
-      fontFamily: "Regular",
-    },
-    sceneStyle: {
-      backgroundColor: theme.colors.background,
+      fontFamily: "Bold",
     },
     headerTitleStyle: {
       fontFamily: "Bold",
@@ -66,7 +64,7 @@ const TabLayout = () => {
         <Tabs.Screen
           name="index"
           options={{
-            title: "Home",
+            title: "Dashboard",
             tabBarIcon: ({ color, size }) => (
               <TabIcon name="home" color={color} size={size} />
             ),
@@ -75,7 +73,7 @@ const TabLayout = () => {
         <Tabs.Screen
           name="classes"
           options={{
-            title: "My Classes",
+            title: "Classes",
             tabBarIcon: ({ color, size }) => (
               <TabIcon name="book" color={color} size={size} />
             ),

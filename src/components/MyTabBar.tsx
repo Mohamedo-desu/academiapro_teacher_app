@@ -13,15 +13,18 @@ const AnimatedView = Animated.createAnimatedComponent(View);
 
 export const TAB_BAR_HEIGHT = 64; // px, adjust as needed
 
-interface MyTabBarProps extends BottomTabBarProps {
+interface CustomTabBarProps extends BottomTabBarProps {
   scrollY: SharedValue<number>;
 }
 
-const MyTabBar: React.FC<MyTabBarProps> = ({ scrollY, ...tabBarProps }) => {
+const CustomTabBar: React.FC<CustomTabBarProps> = (props) => {
+  const { scrollY, ...tabBarProps } = props;
   const insets = useSafeAreaInsets();
   const lastScrollY = useRef(0);
+  const tabBarVisible = useRef(true);
   const visibleValue = useRef(true);
 
+  // We use a local shared value for animation
   const animatedStyle = useAnimatedStyle(() => {
     // Determine direction
     let visible = visibleValue.current;
@@ -32,36 +35,31 @@ const MyTabBar: React.FC<MyTabBarProps> = ({ scrollY, ...tabBarProps }) => {
     }
     lastScrollY.current = scrollY.value;
     visibleValue.current = visible;
-
     const hideY = TAB_BAR_HEIGHT + insets.bottom;
     return {
       transform: [
-        { translateY: withTiming(visible ? 0 : hideY, { duration: 220 }) },
+        {
+          translateY: withTiming(visible ? 0 : hideY, { duration: 220 }),
+        },
       ],
     };
   });
 
   return (
-    <AnimatedView
-      style={[styles.tabBar, animatedStyle, { paddingBottom: insets.bottom }]}
-    >
+    <AnimatedView style={[styles.tabBar, animatedStyle]}>
       <BottomTabBar {...tabBarProps} />
     </AnimatedView>
   );
 };
 
-const styles = StyleSheet.create((theme, rt) => ({
+const styles = StyleSheet.create((theme) => ({
   tabBar: {
     position: "absolute",
-    left: 16,
-    right: 16,
-    bottom: rt.insets.bottom + theme.gap(4),
-    height: TAB_BAR_HEIGHT,
-    borderRadius: theme.radii.xl,
-    overflow: "hidden",
-    backgroundColor: theme.colors.surface,
+    left: 0,
+    right: 0,
+    bottom: 0,
     zIndex: 100,
   },
 }));
 
-export default MyTabBar;
+export default CustomTabBar;

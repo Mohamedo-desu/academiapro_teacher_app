@@ -4,14 +4,14 @@ import { FlatList, Pressable, Text, View } from "react-native";
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
 
 const UniIcon = withUnistyles(Feather, (theme) => ({
-  color: theme.colors.onSurface,
+  color: theme.colors.grey400,
 }));
 
 // Test data: array of classes
 const classesData = Array.from({ length: 15 }, (_, i) => ({
   id: (i + 1).toString(),
   name: `Form ${i + 1} Class`,
-  subjects: Math.floor(Math.random() * 5) + 1, // random 1-5 subjects
+  subjects: Math.floor(Math.random() * 5) + 1,
 }));
 
 const Classes = () => {
@@ -69,8 +69,8 @@ const styles = StyleSheet.create((theme, rt) => ({
     alignItems: "center",
     justifyContent: "space-between",
     padding: theme.gap(3),
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: theme.colors.grey400,
+    borderWidth: 1,
+    borderColor: theme.colors.grey300,
   },
   classInfo: {
     gap: theme.gap(1),
