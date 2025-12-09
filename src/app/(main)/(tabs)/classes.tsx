@@ -1,11 +1,13 @@
 import { TAB_BAR_HEIGHT } from "@/src/components/MyTabBar";
+import { colors } from "@/unistyles";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { useFocusEffect } from "expo-router";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -16,7 +18,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { StyleSheet } from "react-native-unistyles";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
 import { TabScrollYContext } from "./_layout";
 
 const classesData = Array.from({ length: 30 }, (_, i) => ({
@@ -33,6 +35,13 @@ type ClassItem = (typeof classesData)[0] & {
 const CIRCLE_SIZE = 52;
 const EXPANDED_WIDTH = 120;
 
+const UniTextInput = withUnistyles(TextInput, (theme) => ({
+  placeholderTextColor: theme.colors.grey500,
+  cursorColor: theme.colors.primary,
+  selectionColor: theme.colors.primary + "55",
+  selectionHandleColor: theme.colors.primary,
+}));
+
 const Classes = () => {
   const scrollY = useContext(TabScrollYContext);
 
@@ -43,6 +52,16 @@ const Classes = () => {
       originalIndex: index,
     }))
   );
+
+  const [searchText, setSearchText] = useState("");
+
+  // Filtered list based on search
+  const filteredData = useMemo(() => {
+    if (!searchText) return data;
+    return data.filter((item) =>
+      item.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }, [searchText, data]);
 
   // Animation values
   const fabTranslateY = useSharedValue(TAB_BAR_HEIGHT);
@@ -132,10 +151,31 @@ const Classes = () => {
 
   return (
     <>
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <UniTextInput
+          style={styles.searchInput}
+          placeholder="Search class..."
+          value={searchText}
+          onChangeText={setSearchText}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            if (searchText) setSearchText("");
+          }}
+        >
+          <Feather
+            name={searchText ? "x" : "search"}
+            size={20}
+            color={searchText ? "grey" : colors.primary} // primary color when empty or active
+          />
+        </TouchableOpacity>
+      </View>
+
       <Animated.FlatList
         style={styles.container}
         numColumns={2}
-        data={data}
+        data={filteredData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.contentContainerStyle}
@@ -244,5 +284,27 @@ const styles = StyleSheet.create((theme, rt) => ({
     fontFamily: "SemiBold",
     fontSize: theme.fontSizes.sm,
     color: theme.colors.onPrimary,
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: theme.paddingHorizontal * 2,
+    marginVertical: theme.gap(2),
+    paddingHorizontal: theme.paddingHorizontal,
+    height: theme.spacing["3xl"],
+    borderRadius: theme.radii.sm,
+    backgroundColor: theme.colors.background,
+    borderWidth: 1,
+    borderColor: theme.colors.grey300,
+    gap: theme.gap(2),
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: theme.fontSizes.md,
+    color: theme.colors.onSurface,
+    fontFamily: "Regular",
+    includeFontPadding: false,
+    textAlignVertical: "center",
+    verticalAlign: "middle",
   },
 }));
