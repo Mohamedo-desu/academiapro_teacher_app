@@ -1,11 +1,14 @@
+import ToggleTheme from "@/src/components/ToggleTheme";
 import React from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { StyleSheet } from "react-native-unistyles";
 
 const settings = () => {
   return (
     <View style={styles.container}>
-      <Text>settings</Text>
+      <View style={styles.toggleThemeWrapper}>
+        <ToggleTheme />
+      </View>
     </View>
   );
 };
@@ -18,5 +21,12 @@ const styles = StyleSheet.create((theme, rt) => ({
     backgroundColor: theme.colors.background,
     justifyContent: "center",
     alignItems: "center",
+  },
+  toggleThemeWrapper: {
+    position: "absolute",
+    top: rt.insets.top,
+    right: theme.paddingHorizontal * 2,
+    width: "100%",
+    alignItems: "flex-end",
   },
 }));

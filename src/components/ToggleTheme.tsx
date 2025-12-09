@@ -1,4 +1,3 @@
-import { colors } from "@/unistyles";
 import { Feather } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
@@ -8,12 +7,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import {
-  StyleSheet,
-  UnistylesRuntime,
-  withUnistyles,
-} from "react-native-unistyles";
-import { saveToLocalStorage } from "../store/storage";
+import { StyleSheet, withUnistyles } from "react-native-unistyles";
+import { useStore } from "../store/store";
 
 const ThemeItems = [
   { label: "Light", value: "light", icon: "sun" },
@@ -25,28 +20,10 @@ const UniThemeIcon = withUnistyles(Feather, (theme) => ({
   color: theme.colors.onSurface,
 }));
 
-const UpdateTheme = (value: string) => {
-  const currentTheme = UnistylesRuntime.themeName;
-
-  if (currentTheme === value) return;
-
-  if (value === "light") {
-    UnistylesRuntime.setAdaptiveThemes(false);
-    UnistylesRuntime.setTheme("light");
-    saveToLocalStorage([{ key: "theme", value: "light" }]);
-  } else if (value === "dark") {
-    UnistylesRuntime.setAdaptiveThemes(false);
-    UnistylesRuntime.setTheme("dark");
-    saveToLocalStorage([{ key: "theme", value: "dark" }]);
-  } else {
-    UnistylesRuntime.setAdaptiveThemes(true);
-  }
-
-  UnistylesRuntime.setRootViewBackgroundColor(colors.primary);
-};
-
 const ToggleTheme = () => {
-  const [activeTheme, setActiveTheme] = useState(UnistylesRuntime.themeName);
+  const [activeTheme, setActiveTheme] = useState("light");
+  const setTheme = useStore((s) => s.setTheme);
+
   const [expanded, setExpanded] = useState(false);
 
   const progress = useSharedValue(0);
@@ -130,7 +107,7 @@ const ToggleTheme = () => {
               style={styles.themeItem}
               onPress={() => {
                 setActiveTheme(item.value);
-                UpdateTheme(item.value);
+                setTheme(item.value);
                 setExpanded(false);
               }}
             >

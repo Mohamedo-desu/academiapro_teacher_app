@@ -1,10 +1,8 @@
+import { colors } from "@/unistyles";
 import React, { useEffect, useMemo } from "react";
 import { useColorScheme } from "react-native";
 import { SystemBars } from "react-native-edge-to-edge";
-import { MD3DarkTheme, MD3LightTheme, PaperProvider } from "react-native-paper";
 import { UnistylesRuntime } from "react-native-unistyles";
-
-import { colors } from "@/unistyles";
 import { saveToLocalStorage } from "../store/storage";
 import { useStore } from "../store/store";
 
@@ -41,28 +39,12 @@ export default function ThemeProvider({ children }: Props) {
     saveToLocalStorage([{ key: "theme", value: theme }]);
   }, [theme]);
 
-  // --- Sync Paper ---
-  const paperTheme = useMemo(() => {
-    const base = resolvedTheme === "dark" ? MD3DarkTheme : MD3LightTheme;
-
-    return {
-      ...base,
-      colors: {
-        ...base.colors,
-        primary: colors.primary,
-        secondary: colors.secondary,
-        tertiary: colors.tertiary,
-      },
-      roundness: 0,
-    };
-  }, [resolvedTheme]);
-
   const statusStyle = resolvedTheme === "dark" ? "light" : "dark";
 
   return (
-    <PaperProvider theme={paperTheme}>
+    <>
       {children}
       <SystemBars style={statusStyle} />
-    </PaperProvider>
+    </>
   );
 }

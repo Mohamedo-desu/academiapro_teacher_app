@@ -7,7 +7,7 @@ import { useSharedValue } from "react-native-reanimated";
 import { useUnistyles } from "react-native-unistyles";
 
 interface TabIconProps {
-  name: keyof typeof Feather.glyphMap; // ensures valid Feather icon names
+  name: keyof typeof Feather.glyphMap;
   color: string;
   size: number;
 }
@@ -26,7 +26,7 @@ const TabLayout = () => {
   const commonScreenOptions: BottomTabNavigationOptions = {
     headerShown: true,
     tabBarStyle: {
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.primary,
       borderTopWidth: 1,
       borderTopColor: theme.colors.primary,
     },
@@ -43,9 +43,12 @@ const TabLayout = () => {
       textAlignVertical: "center",
     },
     headerTitleAlign: "center",
-    tabBarActiveTintColor: theme.colors.primary,
-    tabBarInactiveTintColor: theme.colors.grey400,
-    animation: "shift",
+    tabBarActiveTintColor: theme.colors.onPrimary,
+    tabBarInactiveTintColor: "rgba(0,0,0,.4)",
+    tabBarItemStyle: {
+      borderRadius: theme.radii.lg,
+    },
+
     tabBarLabelStyle: {
       fontFamily: "Bold",
     },
@@ -68,6 +71,7 @@ const TabLayout = () => {
             tabBarIcon: ({ color, size }) => (
               <TabIcon name="home" color={color} size={size} />
             ),
+            headerTitle: "My Dashboard",
           }}
         />
         <Tabs.Screen
@@ -77,6 +81,7 @@ const TabLayout = () => {
             tabBarIcon: ({ color, size }) => (
               <TabIcon name="book" color={color} size={size} />
             ),
+            headerTitle: "My Classes",
           }}
         />
         <Tabs.Screen
@@ -86,6 +91,7 @@ const TabLayout = () => {
             tabBarIcon: ({ color, size }) => (
               <TabIcon name="clipboard" color={color} size={size} />
             ),
+            headerTitle: "Manage Assignments",
           }}
         />
         <Tabs.Screen
@@ -95,6 +101,7 @@ const TabLayout = () => {
             tabBarIcon: ({ color, size }) => (
               <TabIcon name="folder" color={color} size={size} />
             ),
+            headerTitle: "Browse Library",
           }}
         />
         <Tabs.Screen
@@ -104,6 +111,7 @@ const TabLayout = () => {
             tabBarIcon: ({ color, size }) => (
               <TabIcon name="settings" color={color} size={size} />
             ),
+            headerTitle: "Manage Settings",
           }}
         />
       </Tabs>
