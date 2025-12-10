@@ -3,8 +3,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
 import { Tabs } from "expo-router";
 import React, { createContext } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
-import { useUnistyles } from "react-native-unistyles";
+import { StyleSheet, useUnistyles } from "react-native-unistyles";
 
 interface TabIconProps {
   name: keyof typeof MaterialCommunityIcons.glyphMap;
@@ -123,6 +124,25 @@ const TabLayout = () => {
               />
             ),
             headerTitle: "Browse Library",
+            headerRight: () => (
+              <TouchableOpacity
+                style={styles.headerRightContainer}
+                hitSlop={12}
+                activeOpacity={0.9}
+              >
+                {/* Cart Icon */}
+                <MaterialCommunityIcons
+                  name="cart-variant"
+                  size={24}
+                  color={theme.colors.onPrimary}
+                />
+
+                {/* Professional Badge */}
+                <View style={styles.badgeContainer}>
+                  <Text style={styles.badgeText}>10</Text>
+                </View>
+              </TouchableOpacity>
+            ),
           }}
         />
         <Tabs.Screen
@@ -145,3 +165,31 @@ const TabLayout = () => {
 };
 
 export default TabLayout;
+
+const styles = StyleSheet.create((theme) => ({
+  badgeContainer: {
+    position: "absolute",
+    top: -6,
+    right: -8,
+    minWidth: 18,
+    height: 18,
+    paddingHorizontal: 4,
+
+    backgroundColor: theme.colors.error,
+    borderRadius: theme.radii.round,
+
+    justifyContent: "center",
+    alignItems: "center",
+
+    ...theme.shadows.sm,
+  },
+  badgeText: {
+    fontFamily: "Bold",
+    fontSize: theme.fontSizes.xs,
+    color: "#fff",
+    includeFontPadding: false,
+    textAlign: "center",
+    textAlignVertical: "center",
+  },
+  headerRightContainer: { marginRight: theme.spacing.md },
+}));

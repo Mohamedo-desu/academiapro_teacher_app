@@ -11,8 +11,8 @@ export const BASE_UNIT = 5;
    Colors (light theme)
 --------------------------------------------- */
 export const colors = {
-  primary: "#d69c1a",
-  secondary: "#FF7F50",
+  primary: "#1ad649",
+  secondary: "#da8404",
   tertiary: "#2196F3",
 
   onPrimary: "#FFFFFF",
