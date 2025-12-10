@@ -1,16 +1,9 @@
 import { TAB_BAR_HEIGHT } from "@/src/components/MyTabBar";
 import { colors } from "@/unistyles";
 import { AntDesign, Feather } from "@expo/vector-icons";
-import { useFocusEffect } from "expo-router";
-import React, { useCallback, useContext, useMemo, useState } from "react";
-import {
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { router, useFocusEffect } from "expo-router";
+import React, { useCallback, useMemo, useState } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Animated, {
   LinearTransition,
   interpolate,
@@ -19,7 +12,6 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { StyleSheet, withUnistyles } from "react-native-unistyles";
-import { TabScrollYContext } from "./_layout";
 
 const classesData = Array.from({ length: 30 }, (_, i) => ({
   id: (i + 1).toString(),
@@ -43,8 +35,6 @@ const UniTextInput = withUnistyles(TextInput, (theme) => ({
 }));
 
 const Classes = () => {
-  const scrollY = useContext(TabScrollYContext);
-
   const [data, setData] = useState<ClassItem[]>(
     classesData.map((item, index) => ({
       ...item,
@@ -128,7 +118,14 @@ const Classes = () => {
 
       <TouchableOpacity
         style={styles.pressable}
-        onPress={() => console.log("Pressed:", item.name)}
+        onPress={() =>
+          router.navigate({
+            pathname: "/(main)/(tabs)/classes/[id]",
+            params: {
+              id: item.name,
+            },
+          })
+        }
         onLongPress={() => togglePin(item.id)}
         delayLongPress={250}
         activeOpacity={0.8}
@@ -145,31 +142,29 @@ const Classes = () => {
     </Animated.View>
   );
 
-  const scrollHandler = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    scrollY.value = event.nativeEvent.contentOffset.y;
-  };
-
   return (
     <>
       {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <UniTextInput
-          style={styles.searchInput}
-          placeholder="Search class..."
-          value={searchText}
-          onChangeText={setSearchText}
-        />
-        <TouchableOpacity
-          onPress={() => {
-            if (searchText) setSearchText("");
-          }}
-        >
-          <Feather
-            name={searchText ? "x" : "search"}
-            size={20}
-            color={searchText ? "grey" : colors.primary} // primary color when empty or active
+      <View style={styles.searchWrapper}>
+        <View style={styles.searchContainer}>
+          <UniTextInput
+            style={styles.searchInput}
+            placeholder="Search class..."
+            value={searchText}
+            onChangeText={setSearchText}
           />
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              if (searchText) setSearchText("");
+            }}
+          >
+            <Feather
+              name={searchText ? "x" : "search"}
+              size={20}
+              color={searchText ? "grey" : colors.primary} // primary color when empty or active
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <Animated.FlatList
@@ -182,7 +177,6 @@ const Classes = () => {
         columnWrapperStyle={styles.columnWrapperStyle}
         showsVerticalScrollIndicator={false}
         itemLayoutAnimation={LinearTransition}
-        onScroll={scrollHandler}
         scrollEventThrottle={16}
       />
 
@@ -285,6 +279,11 @@ const styles = StyleSheet.create((theme, rt) => ({
     fontSize: theme.fontSizes.sm,
     color: theme.colors.onPrimary,
   },
+  searchWrapper: {
+    backgroundColor: theme.colors.surface,
+    elevation: 3,
+    zIndex: 1,
+  },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -294,7 +293,7 @@ const styles = StyleSheet.create((theme, rt) => ({
     height: theme.spacing["3xl"],
     borderRadius: theme.radii.sm,
     backgroundColor: theme.colors.background,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: theme.colors.grey300,
     gap: theme.gap(2),
   },

@@ -1,5 +1,5 @@
 import MyTabBar from "@/src/components/MyTabBar";
-import { Feather } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
 import { Tabs } from "expo-router";
 import React, { createContext } from "react";
@@ -7,13 +7,13 @@ import { useSharedValue } from "react-native-reanimated";
 import { useUnistyles } from "react-native-unistyles";
 
 interface TabIconProps {
-  name: keyof typeof Feather.glyphMap;
+  name: keyof typeof MaterialCommunityIcons.glyphMap;
   color: string;
   size: number;
 }
 
 const TabIcon: React.FC<TabIconProps> = ({ name, color, size }) => {
-  return <Feather name={name} size={size} color={color} />;
+  return <MaterialCommunityIcons name={name} size={size} color={color} />;
 };
 
 // Context to provide scrollY to all tab screens
@@ -44,7 +44,7 @@ const TabLayout = () => {
     },
     headerTitleAlign: "center",
     tabBarActiveTintColor: theme.colors.onPrimary,
-    tabBarInactiveTintColor: "rgba(0,0,0,.4)",
+    tabBarInactiveTintColor: "rgba(255,255,255,.5)",
     tabBarItemStyle: {
       borderRadius: theme.radii.lg,
     },
@@ -68,8 +68,12 @@ const TabLayout = () => {
           name="index"
           options={{
             title: "Dashboard",
-            tabBarIcon: ({ color, size }) => (
-              <TabIcon name="home" color={color} size={size} />
+            tabBarIcon: ({ color, size, focused }) => (
+              <TabIcon
+                name={focused ? "book-education" : "book-education-outline"}
+                color={color}
+                size={size}
+              />
             ),
             headerTitle: "My Dashboard",
           }}
@@ -77,9 +81,18 @@ const TabLayout = () => {
         <Tabs.Screen
           name="classes"
           options={{
+            headerShown: false,
             title: "Classes",
-            tabBarIcon: ({ color, size }) => (
-              <TabIcon name="book" color={color} size={size} />
+            tabBarIcon: ({ color, size, focused }) => (
+              <TabIcon
+                name={
+                  focused
+                    ? "book-open-page-variant"
+                    : "book-open-page-variant-outline"
+                }
+                color={color}
+                size={size}
+              />
             ),
             headerTitle: "My Classes",
           }}
@@ -88,8 +101,12 @@ const TabLayout = () => {
           name="assignments"
           options={{
             title: "Assignments",
-            tabBarIcon: ({ color, size }) => (
-              <TabIcon name="clipboard" color={color} size={size} />
+            tabBarIcon: ({ color, size, focused }) => (
+              <TabIcon
+                name={focused ? "notebook-check" : "notebook-check-outline"}
+                color={color}
+                size={size}
+              />
             ),
             headerTitle: "Manage Assignments",
           }}
@@ -98,8 +115,12 @@ const TabLayout = () => {
           name="library"
           options={{
             title: "Library",
-            tabBarIcon: ({ color, size }) => (
-              <TabIcon name="folder" color={color} size={size} />
+            tabBarIcon: ({ color, size, focused }) => (
+              <TabIcon
+                name={focused ? "library" : "library-outline"}
+                color={color}
+                size={size}
+              />
             ),
             headerTitle: "Browse Library",
           }}
@@ -108,8 +129,12 @@ const TabLayout = () => {
           name="settings"
           options={{
             title: "Settings",
-            tabBarIcon: ({ color, size }) => (
-              <TabIcon name="settings" color={color} size={size} />
+            tabBarIcon: ({ color, size, focused }) => (
+              <TabIcon
+                name={focused ? "book-cog" : "book-cog-outline"}
+                color={color}
+                size={size}
+              />
             ),
             headerTitle: "Manage Settings",
           }}
